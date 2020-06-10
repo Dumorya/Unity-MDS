@@ -32,9 +32,11 @@ namespace Part2
 
         private void OnCollisionEnter2D(Collision2D other)
         {
+            Debug.Log(Input.GetKeyDown(KeyCode.Keypad0));
+
             // si on roule, on déclache un effet visuel et la balle s'accélère
-            if ((Input.GetKeyDown(KeyCode.Keypad0) && controls == PlayerControls.ArrowAnd0
-            || Input.GetKey(KeyCode.F) && controls == PlayerControls.ZQSDF) && rollCooldown <= 0)
+            if (Input.GetKey(KeyCode.Keypad0)
+            || Input.GetKey(KeyCode.F))
             {
                 if (other.rigidbody.bodyType == RigidbodyType2D.Dynamic)
                 {
@@ -87,7 +89,7 @@ namespace Part2
                 Instantiate(dust.gameObject, body.position, Quaternion.identity);
             }
 
-            if ((Input.GetKeyDown(KeyCode.Keypad0) && controls == PlayerControls.ArrowAnd0
+            if ((Input.GetKey(KeyCode.Keypad0) && controls == PlayerControls.ArrowAnd0
             || Input.GetKey(KeyCode.F) && controls == PlayerControls.ZQSDF) && rollCooldown <= 0)
             {
                 animator.Play(Anims.Roll);
