@@ -34,18 +34,16 @@ namespace Part2
         {
             Debug.Log(Input.GetKeyDown(KeyCode.Keypad0));
 
-            // si on roule, on déclache un effet visuel et la balle s'accélère
-            if (Input.GetKey(KeyCode.Keypad0)
-            || Input.GetKey(KeyCode.F))
+            // si on roule, on déclanche un effet visuel et la balle s'accélère
+            
+            if (other.rigidbody.bodyType == RigidbodyType2D.Dynamic && animator.CurrentAnimation.name == Anims.Roll)
             {
-                if (other.rigidbody.bodyType == RigidbodyType2D.Dynamic)
-                {
-                    // vitesse sur la balle
-                    other.rigidbody.AddForce(- other.GetContact(0).normal * ShootStrength, ForceMode2D.Impulse);
-                    // effet visuel
-                    Instantiate(ShootFX.gameObject,  other.GetContact(0).point, Quaternion.identity);
-                }
+                // vitesse sur la balle
+                other.rigidbody.AddForce(- other.GetContact(0).normal * ShootStrength, ForceMode2D.Impulse);
+                // effet visuel
+                Instantiate(ShootFX.gameObject,  other.GetContact(0).point, Quaternion.identity);
             }
+            
         }
 
         void Start()
@@ -89,8 +87,8 @@ namespace Part2
                 Instantiate(dust.gameObject, body.position, Quaternion.identity);
             }
 
-            if ((Input.GetKey(KeyCode.Keypad0) && controls == PlayerControls.ArrowAnd0
-            || Input.GetKey(KeyCode.F) && controls == PlayerControls.ZQSDF) && rollCooldown <= 0)
+            if ((Input.GetKeyDown(KeyCode.Keypad0) && controls == PlayerControls.ArrowAnd0
+            || Input.GetKeyDown(KeyCode.F) && controls == PlayerControls.ZQSDF) && rollCooldown <= 0)
             {
                 animator.Play(Anims.Roll);
                 rollCooldown = rollCooldownDuration;
