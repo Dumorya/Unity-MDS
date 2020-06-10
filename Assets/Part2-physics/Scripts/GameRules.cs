@@ -30,6 +30,9 @@ public class GameRules : MonoBehaviour
     private int orangeScore = 0;
     private int blueScore = 0;
     public ParticleSystem boom;
+    private float slowdownFactor = 0.1f;
+    private float slowdownLength = 2f;
+
 
     void Start()
     {
@@ -37,6 +40,12 @@ public class GameRules : MonoBehaviour
         UpdateScores();
         BallCollisionEmitter emitter = ball.gameObject.GetComponentInChildren<BallCollisionEmitter>();
         emitter.OnCollided += BallCollided;
+    }
+    
+    void Update()
+    {
+        Time.timeScale += (1f / slowdownLength) * Time.unscaledDeltaTime;
+        Time.timeScale = Mathf.Clamp(Time.timeScale, 0f, 1f);
     }
 
     void Destroy()
@@ -46,6 +55,12 @@ public class GameRules : MonoBehaviour
         emitter.OnCollided -= BallCollided;
     }
 
+    public void DoSlowmotion()
+    {
+        Time.timeScale = slowdownFactor;
+        Time.fixedDeltaTime = Time.timeScale * 0.02f;
+    }
+
     private void BallCollided(Collision2D collision)
     {
         if (collision.collider.gameObject.name == orange.goal.name)
@@ -53,6 +68,9 @@ public class GameRules : MonoBehaviour
             blueScore++;
             //déclenche l'animation d'explosion de la balle
             Instantiate(boom.gameObject,  collision.GetContact(0).point, Quaternion.identity);
+            DoSlowmotion();
+
+            yield return new WaitForSeconds(2);
 
             UpdateScores();
             ResetPositions();
@@ -62,6 +80,9 @@ public class GameRules : MonoBehaviour
             orangeScore++;
             //déclenche l'animation d'explosion de la balle
             Instantiate(boom.gameObject,  collision.GetContact(0).point, Quaternion.identity);
+            DoSlowmotion();
+
+            yield return new WaitForSeconds(2);
 
             UpdateScores();
             ResetPositions();
